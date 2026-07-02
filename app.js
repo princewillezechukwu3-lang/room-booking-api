@@ -5,10 +5,12 @@ app.use(express.json())
 
 const userRoute = require('./routes/userRoute');
 const roomRoute = require('./routes/roomRoute');
+const errorHandler = require('./middleware')
 
 app.use('/rooms', roomRoute)
 app.use('/users', userRoute)
 
+app.use(errorHandler)
 const port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log(`Application running on port ${port}`)
