@@ -76,3 +76,5 @@ npm run db:seed
 ```bash
 npm run dev
 ```
+## 🔒 Security Specifications
+All secure path segments mandate passing a valid signed JSON Web Token via the HTTP Authorization request header. The token payload securely encapsulates the caller's id and designated role
