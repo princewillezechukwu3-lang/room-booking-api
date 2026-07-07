@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const app = express()
 app.use(express.json())
+const logger = require('./config/logger')
 
 const userRoute = require('./routes/userRoute');
 const roomRoute = require('./routes/roomRoute');
@@ -15,5 +16,5 @@ app.use('/bookings', bookingRoute)
 app.use(errorHandler)
 const port = process.env.PORT || 3000
 app.listen(port, () => {
-    console.log(`Application running on port ${port}`)
+    logger.info(`Application running on port ${port}`)
 })

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const logger = require('../config/logger')
 
 const verifyToken = async (req, res, next) => {
     try {
@@ -22,6 +23,7 @@ const verifyToken = async (req, res, next) => {
     } catch (error) {
         const err = new Error('Token verification failed, access denied');
         err.statusCode = 401;
+        logger.warn(error, 'Token verification failed, access denied')
         next(err);
     }
 };

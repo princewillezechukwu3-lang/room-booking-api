@@ -10,7 +10,6 @@ const createUser = async(name, email, password, role, balance) => {
         delete user.password
         return user
     } catch(error){
-        console.error(error);
         throw error
     }
 }
@@ -23,7 +22,6 @@ const getUserByEmail = async(email) => {
         }
         return result.rows[0]
     } catch(error){
-        console.error(error)
         throw error
     }
 }
