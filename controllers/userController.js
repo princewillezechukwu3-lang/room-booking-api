@@ -5,11 +5,18 @@ const jwt = require('jsonwebtoken');
 const createUser = async(req, res, next) => {
     try{
         const {name, role, balance, email, password} = req.body;
-        if (!name || !role || !balance || !email || !password){
+        if (!name || !role || !email || !password){
             const err = new Error('Missing Input')
             err.statusCode=400
             return next(err)
         }
+
+        if (balance === undefined || balance === null){
+            const err = new Error('Missing Input')
+            err.statusCode=400
+            return next(err)
+        }
+
         const createU = await userModel.createUser(name, email, password, role, balance)
         res.status(201).json(createU)
     } catch(error){
