@@ -14,7 +14,6 @@ app.use('/users', userRoute)
 app.use('/bookings', bookingRoute)
 
 app.use(errorHandler)
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-    logger.info(`Application running on port ${port}`)
-})
+
+
+module.exports = app
