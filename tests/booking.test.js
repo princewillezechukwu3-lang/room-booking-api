@@ -79,4 +79,48 @@ describe('Booking API Endpoints', () => {
 
         expect(bookingFail.statusCode).toBe(400);
     })
+
+    test('Should completely rollback database changes if a database crash occurs mid-transaction', async () => {
+    
+        await request(app)
+            .post('/users')
+            .send({
+                name: 'Rollback Test User',
+                email: 'rollback@test.com',
+                password: 'Password123',
+                balance: 500,
+                role: 'employee'
+            });
+
+        const loginRes = await request(app)
+            .post('/users/login')
+            .send({
+                email: 'rollback@test.com',
+                password: 'Password123'
+            });
+
+        const token = loginRes.body.token;
+
+        const bookingModel = require('../models/bookingModel');
+        jest.spyOn(bookingModel, 'createBooking').mockImplementationOnce(() => {
+            throw new Error('Database transaction crash simulation');
+        });
+
+        const response = await request(app)
+            .post('/bookings')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                room_id: 1,
+                booking_date: '2026-10-12',
+                start_hour: 10,
+                end_hour: 12
+            });
+
+        jest.restoreAllMocks();
+
+        expect(response.statusCode).toBe(500);
+
+        const userCheck = await pool.query('SELECT balance FROM users WHERE email = $1;', ['rollback@test.com']);
+        expect(parseFloat(userCheck.rows[0].balance)).toBe(500);
+    });
 });
